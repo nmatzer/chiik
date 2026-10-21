@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CHIIK Referencias</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Referencias oficiales de las guías de manejo avícola por línea genética, sistema y edad. Funciona sin conexión.">
+<meta name="theme-color" content="#1d4f3d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CHIIK">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: barra superior fija; en pantalla ancha selectores a la izquierda y resultados a la derecha; en teléfono todo en una columna, una sola página con scroll. */
+:root{
+  --bg:#eef2ee; --surface:#ffffff; --sunk:#e3e9e4; --ink:#16231c; --muted:#56655c; --line:#cfd8d1;
+  --brand:#1d4f3d; --brand-ink:#ffffff; --yolk:#c98a10; --yolk-soft:#f7e7c2;
+  --ok:#1f6b47; --ok-soft:#dcefe3; --pend:#8a5a00; --pend-soft:#f6e6c4; --txt:#2c5b8a; --txt-soft:#dde8f4;
+  --warn:#a23a2a; --warn-soft:#f6dcd6; --none:#7b877f;
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1512; --surface:#17201b; --sunk:#1d2822; --ink:#e4ebe6; --muted:#9caca2; --line:#2b3831;
+  --brand:#7cc9a6; --brand-ink:#0f1512; --yolk:#e8b44a; --yolk-soft:#3a2f17;
+  --ok:#7cc9a6; --ok-soft:#1b3328; --pend:#e8b44a; --pend-soft:#3a2f17; --txt:#8fb9e6; --txt-soft:#1c2a3a;
+  --warn:#f09a88; --warn-soft:#3d221d; --none:#7d8a82; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1512; --surface:#17201b; --sunk:#1d2822; --ink:#e4ebe6; --muted:#9caca2; --line:#2b3831;
+  --brand:#7cc9a6; --brand-ink:#0f1512; --yolk:#e8b44a; --yolk-soft:#3a2f17;
+  --ok:#7cc9a6; --ok-soft:#1b3328; --pend:#e8b44a; --pend-soft:#3a2f17; --txt:#8fb9e6; --txt-soft:#1c2a3a;
+  --warn:#f09a88; --warn-soft:#3d221d; --none:#7d8a82; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--brand)}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* barra */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--brand);color:var(--brand-ink)}
+.top .wrap{display:flex;align-items:center;gap:12px;padding-block:8px;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:auto}
+.mark svg{width:30px;height:30px}
+.mark b{font:800 1.35rem/1 var(--f-display);letter-spacing:.02em}
+.mark small{font-size:.72rem;opacity:.8;letter-spacing:.06em;text-transform:uppercase;display:block}
+nav.tabs{display:flex;gap:2px;background:color-mix(in srgb,var(--brand-ink) 14%,transparent);border-radius:999px;padding:3px}
+nav.tabs a{text-decoration:none;padding:6px 12px;border-radius:999px;font-size:.9rem;font-weight:700;white-space:nowrap}
+nav.tabs a[aria-current="page"]{background:var(--brand-ink);color:var(--brand)}
+.net{display:flex;align-items:center;gap:6px;font-size:.78rem;opacity:.95}
+.net i{width:9px;height:9px;border-radius:50%;background:var(--yolk);display:inline-block}
+.net.ok i{background:#7ee0b0}
+
+main{padding-block:16px 48px}
+section[hidden]{display:none}
+
+/* consulta */
+.layout{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}}
+.pick{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+@media (max-width:860px){.pick{position:static}}
+.field{display:grid;gap:6px;min-width:0}
+.lbl{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px;font-size:.92rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:38px}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700}
+.chip:disabled{opacity:.45;cursor:not-allowed}
+.chip svg{width:18px;height:18px;flex:none}
+.egg{width:10px;height:13px;border-radius:50%/60% 60% 40% 40%;border:1px solid var(--muted);flex:none}
+.egg.roja{background:#b9744a;border-color:#8d5333}.egg.blanca{background:#f4f1ea}
+.prod{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.prod .chip{flex-direction:column;justify-content:center;padding:8px 4px;font-size:.85rem}
+.prod .chip svg{width:26px;height:26px}
+.age{display:grid;grid-template-columns:48px 1fr 48px;gap:8px;align-items:stretch}
+.age button{border:1px solid var(--line);background:var(--sunk);border-radius:8px;font-size:1.5rem;font-weight:700;cursor:pointer;min-height:52px}
+.age button:disabled{opacity:.4}
+.agev{display:grid;place-items:center;text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.agev .n{font:600 1.7rem/1 var(--f-num)}
+.agev .u{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.quick{display:flex;flex-wrap:wrap;gap:4px}
+.quick button{border:1px solid var(--line);background:transparent;border-radius:6px;padding:3px 7px;font:500 .8rem var(--f-num);cursor:pointer}
+.quick button[aria-pressed="true"]{background:var(--yolk-soft);border-color:var(--yolk)}
+
+.res{display:grid;gap:16px;min-width:0}
+.ctx{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.ctx h1{font:800 clamp(1.2rem,3.5vw,1.6rem)/1.1 var(--f-display);margin:0;text-wrap:balance}
+.ctx .meta{color:var(--muted);font-size:.9rem}
+.phase{display:inline-block;background:var(--yolk-soft);color:var(--ink);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700}
+.banner{border-radius:var(--r);padding:10px 14px;font-size:.9rem;border:1px solid}
+.banner.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--ink)}
+.banner.pend{background:var(--pend-soft);border-color:var(--pend)}
+.banner.info{background:var(--sunk);border-color:var(--line)}
+
+.grp{display:grid;gap:8px}
+.grp h2{display:flex;align-items:center;gap:8px;font:800 1rem/1.2 var(--f-display);margin:0;letter-spacing:.01em}
+.grp h2 svg{width:20px;height:20px;color:var(--brand)}
+.grp h2 .c{font:500 .75rem var(--f-num);color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:8px}
+@media (max-width:420px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 11px;display:grid;gap:4px;text-align:left;cursor:pointer;min-width:0;align-content:start}
+.card:hover{border-color:var(--brand)}
+.card .p{font-size:.84rem;color:var(--muted);line-height:1.25;overflow-wrap:anywhere}
+.card .v{font:600 1.25rem/1.15 var(--f-num);overflow-wrap:anywhere}
+.card .v small{font:500 .74rem var(--f-body);color:var(--muted);margin-left:4px}
+.card .f{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:.72rem;color:var(--muted)}
+.card.conf{border-color:var(--warn)}
+.card .note{font-size:.74rem;color:var(--txt);line-height:1.3}
+.tag{border-radius:4px;padding:1px 6px;font-weight:700;font-size:.68rem;letter-spacing:.02em}
+.tag.ofi{background:var(--ok-soft);color:var(--ok)}
+.tag.nrv{background:var(--pend-soft);color:var(--pend)}
+.tag.txt{background:var(--txt-soft);color:var(--txt)}
+.tag.otr,.tag.old{background:var(--warn-soft);color:var(--warn)}
+.tag.ctx{background:var(--sunk);color:var(--ink);font-weight:500}
+.cmp{font-size:.78rem;font-weight:700}
+.none{font-size:.82rem;color:var(--muted);padding:2px 2px 0}
+.none b{color:var(--none);font-weight:700}
+details.gen{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details.gen summary{cursor:pointer;font-weight:700}
+.genlist{display:grid;gap:6px;margin-top:10px}
+.genlist div{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.88rem;border-top:1px solid var(--line);padding-top:6px}
+
+/* panel de detalle */
+dialog{border:0;border-radius:14px;padding:0;max-width:min(560px,calc(100vw - 24px));width:100%;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,20,15,.5)}
+.dlg{padding:18px;display:grid;gap:12px}
+.dlg h3{font:800 1.2rem/1.2 var(--f-display);margin:0}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.9rem}
+.dl dt{color:var(--muted)}.dl dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:8px;padding:10px 14px;font-weight:700;border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);text-decoration:none;cursor:pointer;min-height:42px}
+.btn.ghost{background:transparent;color:var(--brand)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.inp{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:9px 10px;min-height:42px;width:100%}
+.out{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:.92rem}
+
+/* guías */
+.page{display:grid;gap:18px;max-width:980px}
+.page h1{font:800 clamp(1.5rem,4vw,2.1rem)/1.1 var(--f-display);margin:0;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+.sum{display:flex;flex-wrap:wrap;gap:8px}
+.sum span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.88rem}
+.glist{display:grid;gap:8px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:6px;min-width:0}
+.gcard.actualizar{border-left:4px solid var(--warn)}
+.gcard.revisar{border-left:4px solid var(--pend)}
+.gcard .t{font-weight:700;overflow-wrap:anywhere}
+.gcard .m{font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.gcard .n{font-size:.88rem;max-width:72ch}
+.gcard .links{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.9rem;font-weight:700}
+.gcard .links a{color:var(--brand)}
+h2.sec{font:800 1.15rem/1.2 var(--f-display);margin:8px 0 0}
+.prose{max-width:70ch;display:grid;gap:10px}
+.prose p,.prose li{margin:0}
+.prose ul,.prose ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.calc{display:grid;gap:12px;max-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.calc .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fixed{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-weight:700;font-size:.92rem}
+.agebar{display:none}
+@media (max-width:860px){
+  .agebar{display:grid;grid-template-columns:52px 1fr 52px;gap:8px;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+  .agebar button{min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font-size:1.4rem;font-weight:700;cursor:pointer}
+  .agebar button:disabled{opacity:.4}
+  .agebar span{text-align:center;font-size:.9rem;line-height:1.2}
+  .agebar b{font:600 1.15rem var(--f-num)}
+  body.consulta main{padding-bottom:96px}
+}
+.foot{color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);padding-top:12px;margin-top:24px}
+@media (prefers-reduced-motion:no-preference){.card,.chip{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-hen" viewBox="0 0 32 32"><path fill="currentColor" d="M21 5c-2 0-3.4 1.6-3.4 3.5 0 .5.1 1 .3 1.4-3.6.5-8.6 2.4-11.4 6.5L4 15.5c-.6-.3-1.3.2-1.2.9.6 5 4.5 9.6 10.2 9.6h5.5c4.5 0 8-3.4 8-7.7 0-2.1-.8-3.8-2-5.2l.8-2.3 2.4-.7c.6-.2.6-1 0-1.2l-2.4-.7C24.9 6.4 23.2 5 21 5zm.6 2.6a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zM11 27.5h2v2.5h-2zm5 0h2v2.5h-2z"/></symbol>
+  <symbol id="i-chick" viewBox="0 0 32 32"><path fill="currentColor" d="M19 4a5 5 0 0 0-5 5c0 .9.2 1.7.6 2.4C9 12.6 5 16.7 5 21.5 5 26 9 29 15 29s11-3.4 11-9c0-3-1.4-5.5-3.6-7.2.9-.9 1.6-2.1 1.6-3.8A5 5 0 0 0 19 4zm1 4a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.6 1.6 3.4.9-3.4 1z"/></symbol>
+  <symbol id="i-breeder" viewBox="0 0 32 32"><path fill="currentColor" d="M10 3c-1.2 1-1.7 2.5-1.2 3.8C6 7.6 4 10 4 13c0 2.8 1.8 5 4.4 5.8L7 21h3l1-2h3l1 2h3l-1.3-2.4C20 17.6 21.5 15.5 21.5 13c0-3.2-2.4-5.9-5.5-6.3.3-1.5-.5-3-1.9-3.7.1.9-.2 1.8-.9 2.3C12.6 4 11.4 3.2 10 3zm1.5 8.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM24 16c2.5 0 4.5 2.6 4.5 6S26.5 28 24 28s-4.5-2.6-4.5-6 2-6 4.5-6z"/></symbol>
+  <symbol id="i-crec" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 20h16M6 16l4-5 3 3 5-7"/></symbol>
+  <symbol id="i-cons" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 10h16l-2 9H6zM8 10l1.5-5M16 10l-1.5-5"/></symbol>
+  <symbol id="i-huevo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 3c3.5 0 6.5 5.5 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.5 8.5 3 12 3z"/></symbol>
+  <symbol id="i-repro" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M9 5c2.5 0 4.5 3.8 4.5 7a4.5 4.5 0 0 1-9 0C4.5 8.8 6.5 5 9 5zM17 9c1.7 0 3 2.4 3 4.5a3 3 0 0 1-6 0"/></symbol>
+  <symbol id="i-viab" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+  <symbol id="i-agua" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3s6 6.7 6 11a6 6 0 0 1-12 0c0-4.3 6-11 6-11z"/></symbol>
+  <symbol id="i-luz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-dens" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/></g></symbol>
+  <symbol id="i-otro" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5" stroke-linecap="round"/></g></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#consulta" aria-label="CHIIK, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><use href="#i-hen"/></svg>
+      <span><b>CHIIK</b><small>Tabla de referencias ideales</small></span>
+    </a>
+    <nav class="tabs" aria-label="Secciones">
+      <a href="#consulta" data-view="consulta">Consulta</a>
+      <a href="#guias" data-view="guias">Guías</a>
+      <a href="#calculadora" data-view="calculadora">Dosis</a>
+      <a href="#acerca" data-view="acerca">Instalar</a>
+    </nav>
+    <span class="net" id="net" role="status"><i></i><span>Comprobando…</span></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- CONSULTA -->
+  <section id="v-consulta" aria-labelledby="ctx-title">
+    <div class="layout">
+      <form class="pick" id="pick" onsubmit="return false" aria-label="Selección">
+        <div class="field"><span class="lbl" id="l-prod">Producción</span><div class="prod" id="f-prod" role="group" aria-labelledby="l-prod"></div></div>
+        <div class="field"><span class="lbl" id="l-line">Línea genética</span><div class="chips" id="f-line" role="group" aria-labelledby="l-line"></div></div>
+        <div class="field" id="w-house"><span class="lbl" id="l-house">Alojamiento / sistema</span><div class="chips" id="f-house" role="group" aria-labelledby="l-house"></div></div>
+        <div class="field" id="w-sex"><span class="lbl" id="l-sex">Sexo</span><div class="chips" id="f-sex" role="group" aria-labelledby="l-sex"></div></div>
+        <div class="field">
+          <span class="lbl" id="l-age">Edad</span>
+          <div class="age">
+            <button type="button" id="age-m" aria-label="Restar una unidad de edad">−</button>
+            <div class="agev" aria-live="polite" aria-labelledby="l-age"><span class="n num" id="age-n">1</span><span class="u" id="age-u">semana</span></div>
+            <button type="button" id="age-p" aria-label="Sumar una unidad de edad">+</button>
+          </div>
+          <label class="sr" for="age-r">Deslizador de edad</label>
+          <input type="range" id="age-r" min="0" max="100" step="1" value="1">
+          <div class="quick" id="age-q" aria-label="Edades clave"></div>
+        </div>
+      </form>
+
+      <div class="res" id="res">
+        <div class="ctx">
+          <h1 id="ctx-title">Cargando datos…</h1>
+          <span class="meta" id="ctx-meta"></span>
+        </div>
+        <div id="banners" class="res"></div>
+        <div id="groups" class="res"></div>
+        <details class="gen" id="gen" hidden><summary id="gen-s">Recomendaciones generales de la guía</summary><div class="genlist" id="gen-l"></div></details>
+        <p class="foot" id="foot"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUÍAS -->
+  <section id="v-guias" hidden>
+    <div class="page">
+      <h1>Guías de manejo utilizadas</h1>
+      <p class="lede" id="g-lede">Cada dato de CHIIK enlaza a la guía oficial y a la página del PDF de donde se tomó. Aquí están todas las guías, con su edición y si el fabricante ya publicó una más nueva.</p>
+      <div class="sum" id="g-sum"></div>
+      <div id="g-body"></div>
+      <h2 class="sec">Páginas oficiales de descarga</h2>
+      <div class="glist">
+        <div class="gcard"><span class="t">Lohmann Breeders · descargas por genética y sistema</span><div class="links"><a href="https://lohmann-breeders.com/download-resources/" target="_blank" rel="noopener">lohmann-breeders.com ↗</a></div></div>
+        <div class="gcard"><span class="t">Hy-Line International · literatura por línea</span><div class="links"><a href="https://www.hyline.com/literature/brown" target="_blank" rel="noopener">Hy-Line Brown ↗</a><a href="https://www.hyline.com/literature/w-80" target="_blank" rel="noopener">Hy-Line W-80 ↗</a></div></div>
+        <div class="gcard"><span class="t">H&amp;N International · material impreso</span><div class="links"><a href="https://hn-int.com/downloads/" target="_blank" rel="noopener">hn-int.com ↗</a></div></div>
+        <div class="gcard"><span class="t">Dekalb (Hendrix Genetics)</span><div class="links"><a href="https://www.dekalb-poultry.com/en/product/dekalb-brown/" target="_blank" rel="noopener">Dekalb Brown ↗</a><a href="https://www.dekalb-poultry.com/en/product/dekalb-white/" target="_blank" rel="noopener">Dekalb White ↗</a></div></div>
+        <div class="gcard"><span class="t">Aviagen · Ross 308</span><div class="links"><a href="https://aviagen.com/eu/brands/ross/products/ross-308" target="_blank" rel="noopener">aviagen.com ↗</a></div></div>
+        <div class="gcard"><span class="t">Cobb-Vantress · centro de recursos</span><div class="links"><a href="https://www.cobbgenetics.com/resources" target="_blank" rel="noopener">cobbgenetics.com ↗</a></div></div>
+      </div>
+      <p class="foot">Los PDF pertenecen a cada fabricante. CHIIK enlaza a ellos para que el usuario verifique cada dato; no los redistribuye. Para leerlos se necesita conexión.</p>
+    </div>
+  </section>
+
+  <!-- CALCULADORA -->
+  <section id="v-calculadora" hidden>
+    <div class="page">
+      <h1>Calculadora de volumen de producto</h1>
+      <p class="lede">Solo multiplica la dosis que usted escribe (ml por litro) por los litros de agua. No recomienda productos, dosis, duración ni tiempos de retiro.</p>
+      <form class="calc" id="calc" onsubmit="return false" novalidate>
+        <div class="fixed">Esta calculadora no reemplaza la etiqueta del producto ni la receta del médico veterinario.</div>
+        <div class="two">
+          <div class="field"><label class="lbl" for="c-dose">Dosis (ml/L)</label><input class="inp num" id="c-dose" inputmode="decimal" autocomplete="off" placeholder="0,75"></div>
+          <div class="field"><label class="lbl" for="c-water">Agua (L)</label><input class="inp num" id="c-water" inputmode="decimal" autocomplete="off" placeholder="1000"></div>
+        </div>
+        <div class="field"><span class="lbl">Rango de la etiqueta (opcional, ml/L)</span>
+          <div class="two"><input class="inp num" id="c-min" inputmode="decimal" autocomplete="off" placeholder="mínimo" aria-label="Dosis mínima de la etiqueta"><input class="inp num" id="c-max" inputmode="decimal" autocomplete="off" placeholder="máximo" aria-label="Dosis máxima de la etiqueta"></div>
+        </div>
+        <div id="c-warn"></div>
+        <button class="btn" id="c-go" type="button">Calcular</button>
+        <div class="out" id="c-out" aria-live="polite">Escriba la dosis y los litros.</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- INSTALAR / ACERCA -->
+  <section id="v-acerca" hidden>
+    <div class="page">
+      <h1>Instalar y usar sin conexión</h1>
+      <div class="prose">
+        <p>CHIIK se instala desde el navegador. Después de abrirla una vez con internet, queda guardada en el equipo y funciona sin conexión en el galpón.</p>
+        <ul>
+          <li><b>Android (Chrome):</b> menú ⋮ → <i>Instalar aplicación</i> o <i>Agregar a pantalla principal</i>.</li>
+          <li><b>iPhone y iPad (Safari):</b> botón Compartir → <i>Agregar a pantalla de inicio</i>.</li>
+          <li><b>Computadora (Chrome o Edge):</b> icono de instalar en la barra de direcciones, o menú → <i>Instalar CHIIK</i>.</li>
+        </ul>
+        <p id="inst-state" class="out">Comprobando estado sin conexión…</p>
+        <button class="btn ghost" id="inst-btn" type="button" hidden>Instalar en este equipo</button>
+      </div>
+      <h2 class="sec">Datos instalados</h2>
+      <dl class="dl" id="about-dl"></dl>
+      <h2 class="sec">Cómo leer los datos</h2>
+      <div class="prose">
+        <ul>
+          <li><span class="tag ofi">Tabla oficial</span> número transcrito de la tabla de la guía, con su página.</li>
+          <li><span class="tag txt">Texto de la guía</span> recomendación tomada del texto, a veces para un intervalo de edad.</li>
+          <li><span class="tag nrv">Por reverificar</span> tomado de un catálogo anterior; falta compararlo otra vez con el PDF.</li>
+          <li><span class="tag old">Edición superada</span> el fabricante ya publicó una edición más nueva que la usada.</li>
+          <li><b>Sin dato oficial</b> la guía no publica ese valor para esa edad. CHIIK no rellena, no interpola y no copia de otra línea.</li>
+        </ul>
+        <p>Ninguna tabla ha pasado todavía por la revisión veterinaria registrada. Úselas como referencia de la guía, no como diagnóstico.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="agebar" id="agebar" aria-label="Cambiar edad">
+  <button type="button" id="ab-m" aria-label="Restar una unidad de edad">−</button>
+  <span id="ab-t" aria-live="polite"></span>
+  <button type="button" id="ab-p" aria-label="Sumar una unidad de edad">+</button>
+</div>
+<dialog id="dlg" aria-labelledby="d-title"><div class="dlg" id="dlg-body"></div></dialog>
+
+<script src="data.js"></script>
+<script>
+"use strict";
+const D = window.CHIIK_DATA;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = { get(k){ try{ return JSON.parse(localStorage.getItem("chiik:"+k)); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem("chiik:"+k, JSON.stringify(v)); }catch(e){} } };
+
+const PROD = [
+  { id:"ponedora", label:"Ponedoras", icon:"i-hen", unit:"semana", horizon:100, start:1, quick:[1,6,12,16,17,18,20,25,30,40,50,60,70,80,90,100] },
+  { id:"engorde", label:"Engorde", icon:"i-chick", unit:"día", horizon:null, start:0, quick:[0,7,14,21,28,35,42,49,56] },
+  { id:"reproductora", label:"Reproductoras", icon:"i-breeder", unit:"semana", horizon:65, start:1, quick:[1,5,10,15,20,22,24,25,30,35,40,45,50,55,60,65] },
+];
+const GROUPS = { crec:["Crecimiento","i-crec"], cons:["Alimento y conversión","i-cons"], huevo:["Producción de huevo","i-huevo"], repro:["Reproducción","i-repro"], viab:["Viabilidad","i-viab"], agua:["Agua","i-agua"], luz:["Luz","i-luz"], dens:["Densidad","i-dens"], otro:["Otros","i-otro"] };
+const GORDER = ["crec","cons","huevo","repro","viab","agua","luz","dens","otro"];
+const STTAG = { ofi:"Tabla oficial", nrv:"Por reverificar", txt:"Texto de la guía", otr:"Otro estado" };
+const HOUSE_LBL = { "jaula":"Jaula", "piso":"Piso / alternativo", "alternativo":"Alternativo", "abierto":"Abierto", "túnel":"Túnel", "tunel":"Túnel", "":"Sin distinción" };
+const SEX_LBL = { "hembra":"Hembra", "macho":"Macho", "mixto":"Mixto", "":"Sin distinción" };
+
+/* ---------- índices ---------- */
+const C = {}; D.cols.forEach((c,i)=>C[c]=i);
+const SRC = Object.fromEntries(D.sources.map(s=>[s.id,s]));
+const byLine = D.lines.map(()=>[]);
+const ROWI = new Map();
+D.rows.forEach((r,i)=>{ byLine[r[C.line]].push(r); ROWI.set(r,i); });
+const lineIdx = id => D.lines.findIndex(l=>l.id===id);
+
+function coverage(li, house, sex){
+  let lo=Infinity, hi=-Infinity;
+  for (const r of byLine[li]) {
+    if (r[C.ageLo]==null || r[C.ageLo]!==r[C.ageHi]) continue;
+    if (!matchCtx(r, house, sex)) continue;
+    lo=Math.min(lo,r[C.ageLo]); hi=Math.max(hi,r[C.ageHi]);
+  }
+  return lo===Infinity ? null : {lo,hi};
+}
+function matchCtx(r, house, sex){
+  const h=r[C.housing], s=r[C.sex];
+  return (h==="" || h===house) && (s==="" || s===sex || (sex==="" ));
+}
+
+/* ---------- estado ---------- */
+const S = Object.assign({ prod:"ponedora", line:null, house:null, sex:null, age:1 }, store.get("sel") || {});
+const real = {}; // valores reales efímeros por clave de tarjeta
+
+function linesOf(prod){ return D.lines.map((l,i)=>({...l,i})).filter(l=>l.prod===prod); }
+function normalize(){
+  const P = PROD.find(p=>p.id===S.prod) || PROD[0]; S.prod=P.id;
+  const ls = linesOf(S.prod);
+  if (!ls.some(l=>l.id===S.line)) S.line = ls[0]?.id ?? null;
+  const L = D.lines[lineIdx(S.line)];
+  if (!L) return;
+  const houses = L.housings.filter(h=>h!=="");
+  if (!houses.includes(S.house)) S.house = houses[0] ?? "";
+  const sexes = L.sexes.filter(s=>s!=="");
+  if (!sexes.includes(S.sex)) S.sex = sexes.includes("hembra") ? "hembra" : (sexes[0] ?? "");
+  const max = horizon();
+  if (!Number.isInteger(S.age)) S.age = P.start;
+  S.age = Math.min(Math.max(S.age, P.start), max);
+}
+function horizon(){
+  const P = PROD.find(p=>p.id===S.prod);
+  if (P.horizon) return P.horizon;
+  const cov = coverage(lineIdx(S.line), S.house, S.sex);
+  return cov ? cov.hi : 56;
+}
+
+/* ---------- consulta ---------- */
+function query(){
+  const li = lineIdx(S.line), L = D.lines[li];
+  const exact=[], ranges=[], general=[], present=new Set();
+  for (const r of byLine[li]) {
+    if (!matchCtx(r, S.house, S.sex)) continue;
+    present.add(r[C.param]);
+    const lo=r[C.ageLo], hi=r[C.ageHi];
+    if (lo==null) { general.push(r); continue; }
+    if (lo===hi) { if (lo===S.age) exact.push(r); continue; }
+    if (S.age>=lo && (hi==null || S.age<=hi)) ranges.push(r);
+  }
+  const phases = {}; exact.forEach(r=>{ const p=r[C.phase]; if(p) phases[p]=(phases[p]||0)+1; });
+  const phase = Object.entries(phases).sort((a,b)=>b[1]-a[1])[0]?.[0] || "";
+  return { L, li, exact, ranges, general, present, phase, cov: coverage(li, S.house, S.sex) };
+}
+
+function fmtVal(r){
+  const a=r[C.min], b=r[C.max];
+  if (a && !b && /^[<>≤≥]/.test(a)) return a;
+  if (a && b && a!==b) return `${a}–${b}`;
+  if (a && !b) return `≥ ${a}`;
+  if (!a && b) return `≤ ${b}`;
+  return a || b;
+}
+function srcOf(r){ return SRC[r[C.source]]; }
+function pdfLink(r){ const s=srcOf(r); if(!s) return ""; const p=r[C.page]; return s.url + (p ? "#page="+p : ""); }
+function isOld(r){ const s=srcOf(r); return s && s.status==="actualizar"; }
+function ctxTags(r){
+  const t=[];
+  if (r[C.ageLo]!=null && r[C.ageLo]!==r[C.ageHi]) t.push(`${r[C.unit]==="día"?"días":"semanas"} ${r[C.ageText]}`);
+  if (r[C.housing]==="" && D.lines[r[C.line]].housings.filter(Boolean).length>1) t.push("todos los sistemas");
+  return t;
+}
+function cardKey(r){ return r[C.line]+"|"+r[C.param]+"|"+r[C.sheetRow]; }
+
+function render(){
+  normalize();
+  store.set("sel", {prod:S.prod,line:S.line,house:S.house,sex:S.sex,age:S.age});
+  const P = PROD.find(p=>p.id===S.prod);
+  // producción
+  $("#f-prod").innerHTML = PROD.map(p=>`<button type="button" class="chip" data-prod="${p.id}" aria-pressed="${p.id===S.prod}"><svg aria-hidden="true"><use href="#${p.icon}"/></svg>${p.label}</button>`).join("");
+  // líneas
+  $("#f-line").innerHTML = linesOf(S.prod).map(l=>`<button type="button" class="chip" data-line="${l.id}" aria-pressed="${l.id===S.line}">${l.egg?`<span class="egg ${l.egg}" aria-hidden="true"></span>`:""}${esc(l.name)}${l.egg?`<span class="sr"> (huevo ${l.egg})</span>`:""}</button>`).join("");
+  const L = D.lines[lineIdx(S.line)];
+  const houses = L.housings.filter(Boolean), sexes = L.sexes.filter(Boolean);
+  $("#w-house").hidden = houses.length===0 || (houses.length===1 && L.prod!=="ponedora");
+  $("#f-house").innerHTML = houses.map(h=>`<button type="button" class="chip" data-house="${esc(h)}" aria-pressed="${h===S.house}">${esc(HOUSE_LBL[h]||h)}</button>`).join("")
+    + (houses.length===1 && L.prod==="ponedora" ? `<span class="none">La guía usada solo cubre ${esc(HOUSE_LBL[houses[0]]||houses[0]).toLowerCase()}.</span>` : "");
+  $("#w-sex").hidden = sexes.length<2;
+  $("#f-sex").innerHTML = sexes.map(s=>`<button type="button" class="chip" data-sex="${esc(s)}" aria-pressed="${s===S.sex}">${esc(SEX_LBL[s]||s)}</button>`).join("");
+  // edad
+  const max = horizon();
+  $("#age-n").textContent = S.age; $("#age-u").textContent = P.unit + (S.age===1?"":"s");
+  if (P.unit==="día") $("#age-u").textContent = S.age===1?"día":"días";
+  $("#age-m").disabled = S.age<=P.start; $("#age-p").disabled = S.age>=max;
+  const rg=$("#age-r"); rg.min=P.start; rg.max=max; rg.value=S.age; rg.setAttribute("aria-valuetext", `${S.age} ${$("#age-u").textContent}`);
+  $("#ab-t").innerHTML = `<b>${S.age}</b> ${esc($("#age-u").textContent)}<br><span style="color:var(--muted);font-size:.8rem">${esc(L.name)}</span>`;
+  $("#ab-m").disabled = S.age<=P.start; $("#ab-p").disabled = S.age>=max;
+  $("#age-q").innerHTML = P.quick.filter(q=>q<=max).map(q=>`<button type="button" data-age="${q}" aria-pressed="${q===S.age}" aria-label="${P.unit} ${q}">${q}</button>`).join("");
+  renderResults();
+}
+
+function renderResults(){
+  const q = query(), L=q.L, P=PROD.find(p=>p.id===S.prod);
+  const unitW = P.unit==="día" ? "Día" : "Semana";
+  $("#ctx-title").textContent = `${L.name} · ${unitW} ${S.age}`;
+  const bits=[]; if (S.house) bits.push(HOUSE_LBL[S.house]||S.house); if (S.sex && L.sexes.filter(Boolean).length>1) bits.push(SEX_LBL[S.sex]||S.sex);
+  $("#ctx-meta").innerHTML = (q.phase?`<span class="phase">${esc(q.phase)}</span> `:"") + esc(bits.join(" · "));
+  // avisos
+  const B=[];
+  if (!q.cov) B.push(`<div class="banner warn">No hay datos para esta combinación. La guía usada no publica tablas para este sistema o sexo.</div>`);
+  else if (S.age<q.cov.lo || S.age>q.cov.hi) B.push(`<div class="banner warn"><b>Fuera de la cobertura de esta guía.</b> Las tablas por edad cubren de ${P.unit} ${q.cov.lo} a ${q.cov.hi}. CHIIK no extrapola.</div>`);
+  const oldSrc = new Set(); [...q.exact,...q.ranges].forEach(r=>{ if(isOld(r)) oldSrc.add(r[C.source]); });
+  oldSrc.forEach(id=>{ const s=SRC[id]; B.push(`<div class="banner pend"><b>Edición superada:</b> ${esc(s.title)} (${esc(s.edition)}). ${esc(s.note)} ${s.newer?`<a href="${esc(s.newer.url)}" target="_blank" rel="noopener">Ver ${esc(s.newer.label)} ↗</a>`:""}</div>`); });
+  $("#banners").innerHTML = B.join("");
+  // grupos
+  const shown = [...q.exact, ...q.ranges];
+  const byG = {}; const seenParam=new Set();
+  const dupCount = {}; q.exact.forEach(r=>{ dupCount[r[C.param]]=(dupCount[r[C.param]]||0)+1; });
+  shown.forEach(r=>{ const g=D.params[r[C.param]].group; (byG[g]=byG[g]||[]).push(r); seenParam.add(r[C.param]); });
+  const missingByG = {};
+  q.present.forEach(pi=>{ if(!seenParam.has(pi)){ const g=D.params[pi].group; (missingByG[g]=missingByG[g]||[]).push(D.params[pi].label); } });
+  let html="";
+  for (const g of GORDER) {
+    const rs = (byG[g]||[]).sort((a,b)=>a[C.param]-b[C.param] || (a[C.ageLo]===a[C.ageHi]?-1:1));
+    const miss = missingByG[g]||[];
+    if (!rs.length && !miss.length) continue;
+    html += `<section class="grp" aria-label="${GROUPS[g][0]}"><h2><svg aria-hidden="true"><use href="#${GROUPS[g][1]}"/></svg>${GROUPS[g][0]} <span class="c">${rs.length}</span></h2>`;
+    if (rs.length) html += `<div class="cards">` + rs.map(r=>cardHTML(r, dupCount[r[C.param]]>1 && r[C.ageLo]===r[C.ageHi])).join("") + `</div>`;
+    if (miss.length) html += `<p class="none"><b>Sin dato oficial para esta edad:</b> ${miss.map(esc).join(" · ")}</p>`;
+    html += `</section>`;
+  }
+  if (!shown.length && q.cov) html += `<div class="banner info">Sin dato oficial para esta edad en ningún parámetro. Pruebe una edad cercana con los botones.</div>`;
+  $("#groups").innerHTML = html;
+  // generales
+  const gen = q.general;
+  $("#gen").hidden = !gen.length;
+  $("#gen-s").textContent = `Recomendaciones generales de la guía, sin edad exacta (${gen.length})`;
+  $("#gen-l").innerHTML = gen.map(r=>{ const p=D.params[r[C.param]]; return `<div><b>${esc(stripUnit(p.label))}</b><span class="num">${esc(fmtVal(r))} ${esc(p.unit)}</span><span class="tag ctx">${esc(r[C.ageText]||"general")}</span>${r[C.phase]?`<span class="tag ctx">${esc(r[C.phase])}</span>`:""}${r[C.note]!=null?`<span style="color:var(--txt)">${esc(D.notes[r[C.note]])}</span>`:""}<a href="${esc(pdfLink(r))}" target="_blank" rel="noopener">p. ${r[C.page]??"–"} ↗</a></div>`; }).join("");
+  $("#foot").textContent = `Datos ${D.meta.version} · ${D.meta.rowCount.toLocaleString("es-MX")} filas de ${D.sources.filter(s=>s.rows).length} guías · ${D.meta.review}`;
+}
+function stripUnit(l){ return l.replace(/\s*\([^()]*\)\s*$/,""); }
+function cardHTML(r, conflict){
+  const p=D.params[r[C.param]], key=cardKey(r), rv=real[key];
+  let cmp="";
+  if (rv!=null) { const c=compare(rv, r, p); if (c) cmp=`<span class="cmp">${esc(c.short)}</span>`; }
+  const tags = ctxTags(r).map(t=>`<span class="tag ctx">${esc(t)}</span>`).join("");
+  return `<button type="button" class="card${conflict?" conf":""}" data-key="${esc(key)}" data-row="${ROWI.get(r)}">
+    <span class="p">${esc(stripUnit(p.label))}</span>
+    <span class="v">${esc(fmtVal(r))}<small>${esc(p.unit)}</small></span>
+    <span class="f"><span class="tag ${r[C.status]}">${STTAG[r[C.status]]||""}</span>${isOld(r)?`<span class="tag old">Edición superada</span>`:""}${conflict?`<span class="tag old">Dos valores en la hoja</span>`:""}${tags}<span>p. ${r[C.page]??"–"}</span></span>${r[C.note]!=null?`<span class="note">${esc(D.notes[r[C.note]])}</span>`:""}${cmp}
+  </button>`;
+}
+
+/* ---------- comparación ---------- */
+function num(s){ s=String(s).trim(); if(!/^-?\d+([.,]\d+)?$/.test(s)) return null; return parseFloat(s.replace(",",".")); }
+function compare(v, r, p){
+  const a=num(r[C.min]), b=num(r[C.max]); if (a==null && b==null) return null;
+  const pct = /%/.test(p.unit), u = pct ? "pp" : p.unit;
+  const f = x => (Math.round(x*100)/100).toLocaleString("es-MX");
+  const lo = a ?? b, hi = b ?? a;
+  if (lo===hi) { const d=v-lo; return { short:`Real ${f(v)} · diferencia ${d>0?"+":""}${f(d)} ${u}`, long:`Diferencia real − referencia: ${d>0?"+":""}${f(d)} ${u}` + (!pct && lo!==0 ? ` (${d>0?"+":""}${f(100*d/lo)} % relativo)`:"") }; }
+  if (v>=lo && v<=hi) return { short:`Real ${f(v)} · dentro del rango`, long:"Dentro del rango publicado." };
+  if (v<lo) return { short:`Real ${f(v)} · ${f(v-lo)} ${u} bajo el mínimo`, long:`Por debajo del mínimo publicado: ${f(v-lo)} ${u}.` };
+  return { short:`Real ${f(v)} · +${f(v-hi)} ${u} sobre el máximo`, long:`Por encima del máximo publicado: +${f(v-hi)} ${u}.` };
+}
+
+/* ---------- detalle ---------- */
+function openDetail(ri, key){
+  const r=D.rows[ri], p=D.params[r[C.param]], s=srcOf(r), L=D.lines[r[C.line]];
+  const age = r[C.ageLo]===r[C.ageHi] ? `${r[C.unit]} ${r[C.ageLo]}` : (r[C.ageText]||"general");
+  const body = $("#dlg-body");
+  body.innerHTML = `<h3 id="d-title">${esc(stripUnit(p.label))}</h3>
+    <div class="v num" style="font-size:1.6rem;font-weight:600">${esc(fmtVal(r))} <small style="font-size:.9rem">${esc(p.unit)}</small></div>
+    <dl class="dl">
+      <dt>Línea</dt><dd>${esc(L.name)}</dd>
+      <dt>Edad</dt><dd>${esc(age)}</dd>
+      ${r[C.phase]?`<dt>Fase</dt><dd>${esc(r[C.phase])}</dd>`:""}
+      <dt>Sistema</dt><dd>${esc(HOUSE_LBL[r[C.housing]]||r[C.housing]||"La fuente no distingue")}</dd>
+      <dt>Sexo</dt><dd>${esc(SEX_LBL[r[C.sex]]||r[C.sex]||"No indicado")}</dd>
+      <dt>Estado</dt><dd>${esc(D.statuses[r[C.status]]||"")}. Revisión veterinaria pendiente.</dd>
+      ${r[C.note]!=null?`<dt>Nota</dt><dd>${esc(D.notes[r[C.note]])}</dd>`:""}
+      <dt>Guía</dt><dd>${s?esc(s.title):"Sin fuente registrada"}</dd>
+      ${s?`<dt>Edición</dt><dd>${esc(s.edition)} · ${esc(s.maker)}</dd>`:""}
+      <dt>Página PDF</dt><dd class="num">${r[C.page]??"–"} <span style="color:var(--muted)">(página física del archivo)</span></dd>
+      <dt>Fila en hoja</dt><dd class="num">${esc(L.tab)} · ${r[C.sheetRow]}</dd>
+    </dl>
+    ${s && s.status==="actualizar" ? `<div class="banner pend">${esc(s.note)}</div>`:""}
+    <div class="row">${s?`<a class="btn" href="${esc(pdfLink(r))}" target="_blank" rel="noopener">Abrir PDF en p. ${r[C.page]??""} <svg width="16" height="16" aria-hidden="true"><use href="#i-out"/></svg></a>`:""}<button class="btn ghost" type="button" data-close>Cerrar</button></div>
+    <div class="field"><label class="lbl" for="d-real">Comparar con un valor real (${esc(p.unit)})</label>
+      <input class="inp num" id="d-real" inputmode="decimal" autocomplete="off" value="${real[key]!=null?real[key]:""}" placeholder="Escriba el valor medido">
+      <div class="out" id="d-cmp" aria-live="polite">La comparación no diagnostica. Solo muestra la distancia a la referencia.</div>
+      <button class="btn ghost" type="button" id="d-clear">Borrar valor real</button>
+    </div>
+    <p class="none">Sin conexión, el PDF no abre; la página queda anotada aquí para verificarla después.</p>`;
+  const inp=body.querySelector("#d-real"), out=body.querySelector("#d-cmp");
+  const upd=()=>{ const v=num(inp.value); if(inp.value.trim()===""){ delete real[key]; out.textContent="La comparación no diagnostica. Solo muestra la distancia a la referencia."; } else if(v==null){ delete real[key]; out.textContent="Escriba un número, con punto o coma decimal."; } else { real[key]=v; const c=compare(v,r,p); out.textContent=c?c.long:"La referencia no es numérica; no se puede comparar."; } renderResults(); };
+  inp.addEventListener("input", upd);
+  body.querySelector("#d-clear").addEventListener("click",()=>{ inp.value=""; upd(); inp.focus(); });
+  body.querySelector("[data-close]").addEventListener("click",()=>$("#dlg").close());
+  if (inp.value) upd();
+  $("#dlg").showModal();
+}
+
+/* ---------- eventos de consulta ---------- */
+$("#pick").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if (b.dataset.prod && b.dataset.prod!==S.prod){ S.prod=b.dataset.prod; S.line=null; S.house=null; S.sex=null; S.age=PROD.find(p=>p.id===S.prod).start; }
+  else if (b.dataset.line){ S.line=b.dataset.line; }
+  else if (b.dataset.house!=null){ S.house=b.dataset.house; }
+  else if (b.dataset.sex!=null){ S.sex=b.dataset.sex; }
+  else if (b.dataset.age){ S.age=+b.dataset.age; }
+  else if (b.id==="age-m"){ S.age--; }
+  else if (b.id==="age-p"){ S.age++; }
+  else return;
+  render();
+  if (b.id==="age-m"||b.id==="age-p") { const t=$("#"+b.id); if(!t.disabled) t.focus(); else $("#age-r").focus(); }
+});
+$("#ab-m").addEventListener("click",()=>{ S.age--; render(); });
+$("#ab-p").addEventListener("click",()=>{ S.age++; render(); });
+$("#age-r").addEventListener("input", e=>{ S.age=+e.target.value; render(); });
+$("#groups").addEventListener("click", e=>{ const c=e.target.closest(".card"); if(c) openDetail(+c.dataset.row, c.dataset.key); });
+$("#dlg").addEventListener("click", e=>{ if(e.target===$("#dlg")) $("#dlg").close(); });
+
+/* ---------- guías ---------- */
+function renderGuides(){
+  const st = { vigente:["Vigente","ofi"], actualizar:["Hay edición más nueva","old"], revisar:["Revisar vigencia","nrv"], reemplazada:["Edición anterior","ctx"] };
+  const use = { usada:"Datos tomados de esta guía", consulta:"Guía de consulta", pendiente:"Aún no usada", historial:"Ya no se usa" };
+  const groups = ["Ponedoras","Engorde","Reproductoras"];
+  const all = D.sources;
+  const nAct = all.filter(s=>s.status==="actualizar").length, nRev=all.filter(s=>s.status==="revisar").length, nUsed=all.filter(s=>s.rows).length;
+  $("#g-sum").innerHTML = `<span><b class="num">${all.length}</b> guías</span><span><b class="num">${nUsed}</b> con datos en la app</span><span><b class="num">${nAct}</b> con edición más nueva</span><span><b class="num">${nRev}</b> por confirmar</span><span>Ediciones verificadas el <b class="num">${esc(D.meta.guidesChecked)}</b></span>`;
+  $("#g-body").innerHTML = groups.map(g=>{
+    const items = all.filter(s=>s.group===g);
+    return `<h2 class="sec">${g}</h2><div class="glist">` + items.map(s=>`<article class="gcard ${s.status}">
+      <span class="t">${esc(s.title)}</span>
+      <span class="m"><span>${esc(s.maker)}</span><span>Edición: <b>${esc(s.edition)}</b></span><span>${esc(s.lang)}</span><span class="tag ${st[s.status]?.[1]||"ctx"}">${st[s.status]?.[0]||esc(s.status)}</span><span>${use[s.use]||""}${s.rows?` · <span class="num">${s.rows.toLocaleString("es-MX")}</span> filas`:""}</span></span>
+      ${s.note?`<span class="n">${esc(s.note)}</span>`:""}
+      <span class="links"><a href="${esc(s.url)}" target="_blank" rel="noopener">Abrir PDF ↗</a>${s.newer?`<a href="${esc(s.newer.url)}" target="_blank" rel="noopener">${esc(s.newer.label)} ↗</a>`:""}${s.alt?`<a href="${esc(s.alt.url)}" target="_blank" rel="noopener">${esc(s.alt.label)} ↗</a>`:""}</span>
+    </article>`).join("") + `</div>`;
+  }).join("");
+}
+
+/* ---------- calculadora ---------- */
+let confirmed=false;
+function calcReset(){ confirmed=false; $("#c-warn").innerHTML=""; $("#c-out").textContent="Escriba la dosis y los litros."; }
+["c-dose","c-water","c-min","c-max"].forEach(id=>$("#"+id).addEventListener("input", calcReset));
+function cnum(s){ s=String(s).trim(); if(!/^\d+([.,]\d+)?$/.test(s)) return null; const v=parseFloat(s.replace(",",".")); return isFinite(v)?v:null; }
+$("#c-go").addEventListener("click", ()=>{
+  const d=cnum($("#c-dose").value), w=cnum($("#c-water").value);
+  const mnS=$("#c-min").value.trim(), mxS=$("#c-max").value.trim();
+  const mn = mnS?cnum(mnS):null, mx = mxS?cnum(mxS):null;
+  const out=$("#c-out"), warn=$("#c-warn");
+  if (d==null || d<=0) { out.textContent="La dosis debe ser un número mayor que cero (use punto o coma decimal, sin separador de miles)."; return; }
+  if (w==null || w<=0) { out.textContent="Los litros de agua deben ser un número mayor que cero."; return; }
+  if ((mnS && mn==null) || (mxS && mx==null) || (mn!=null && mx!=null && mn>mx)) { out.textContent="El rango de la etiqueta no es válido: revise mínimo y máximo."; return; }
+  const hasRange = mn!=null || mx!=null;
+  const outside = hasRange && ((mn!=null && d<mn) || (mx!=null && d>mx));
+  if (!confirmed) {
+    let msg="";
+    if (!hasRange) msg = "Sin rango de referencia configurado; no se ha comprobado la dosis.";
+    else if (outside) {
+      msg = "La dosis está fuera del rango de la etiqueta que escribió.";
+      const inR = x => (mn==null || x>=mn) && (mx==null || x<=mx);
+      const hit = [[d/10,"10 veces mayor"],[d/100,"100 veces mayor"],[d*10,"10 veces menor"],[d*100,"100 veces menor"]].find(([x])=>inR(x));
+      if (hit) msg += ` Es ${hit[1]} que un valor dentro del rango: revise si hay un error de decimal. CHIIK no cambia la cifra.`;
+    }
+    if (msg) {
+      warn.innerHTML = `<div class="banner ${outside?"warn":"pend"}">${esc(msg)}</div><label class="row"><input type="checkbox" id="c-ok"> Confirmo que la dosis es correcta</label>`;
+      $("#c-ok").addEventListener("change", e=>{ confirmed=e.target.checked; });
+      out.textContent = "Confirme la dosis para calcular.";
+      return;
+    }
+  }
+  const total = d*w;
+  const f = x => x.toLocaleString("es-MX",{maximumFractionDigits:3});
+  out.innerHTML = `<b class="num">${f(d)} ml/L × ${f(w)} L = ${f(total)} ml</b> de producto.${total>=1000?` <span class="num">(${f(total/1000)} L)</span>`:""}`;
+});
+
+/* ---------- instalar / acerca ---------- */
+function renderAbout(){
+  const m=D.meta;
+  $("#about-dl").innerHTML = `<dt>Versión de datos</dt><dd class="num">${esc(m.version)}</dd><dt>Construido</dt><dd class="num">${esc(m.built)}</dd>
+  <dt>Origen</dt><dd>${esc(m.sheet)}</dd><dt>Filas</dt><dd class="num">${m.rowCount.toLocaleString("es-MX")}</dd>
+  <dt>Ediciones verificadas</dt><dd class="num">${esc(m.guidesChecked)}</dd><dt>Revisión</dt><dd>${esc(m.review)}</dd>
+  <dt>Huella SHA-256</dt><dd class="num" style="font-size:.75rem">${esc(m.sha256||"")}</dd>`;
+}
+let deferred=null;
+window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); deferred=e; $("#inst-btn").hidden=false; });
+$("#inst-btn").addEventListener("click", async()=>{ if(!deferred) return; deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred=null; $("#inst-btn").hidden=true; });
+
+async function offlineState(){
+  const net=$("#net"), lbl=net.querySelector("span");
+  let ready=false;
+  try { if ("caches" in window) { const a=await caches.match("data.js"), b=await caches.match("./")||await caches.match("index.html"); ready=!!(a&&b); } } catch(e){}
+  const on = navigator.onLine;
+  net.classList.toggle("ok", ready);
+  lbl.textContent = ready ? (on?"Lista sin conexión":"Sin conexión · datos locales") : (on?"En línea":"Sin conexión");
+  $("#inst-state").textContent = ready ? `Disponible sin conexión en este equipo (datos ${D.meta.version}).`
+    : ("serviceWorker" in navigator && window.isSecureContext && location.protocol!=="file:") ? "Descargando para uso sin conexión… vuelva a abrir esta sección en unos segundos."
+    : "Esta copia se abrió como archivo o en una vista previa: para usarla sin conexión en el teléfono, ábrala desde su dirección web e instálela.";
+}
+window.addEventListener("online", offlineState); window.addEventListener("offline", offlineState);
+if ("serviceWorker" in navigator && window.isSecureContext && location.protocol!=="file:") {
+  navigator.serviceWorker.register("sw.js").then(reg=>{
+    navigator.serviceWorker.ready.then(()=>setTimeout(offlineState,800));
+    reg.addEventListener("updatefound", ()=>{ const w=reg.installing; w&&w.addEventListener("statechange", ()=>{ if(w.state==="installed" && navigator.serviceWorker.controller){ const b=document.createElement("div"); b.className="banner info"; b.innerHTML='Hay una actualización de CHIIK descargada. <button class="btn ghost" type="button">Activar</button>'; b.querySelector("button").onclick=()=>{ w.postMessage("skip"); }; $("#banners").prepend(b); } }); });
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>location.reload());
+}
+
+/* ---------- vistas ---------- */
+const VIEWS=["consulta","guias","calculadora","acerca"];
+function show(){
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "consulta";
+  VIEWS.forEach(x=>{ $("#v-"+x).hidden = x!==v; });
+  document.body.classList.toggle("consulta", v==="consulta"); $("#agebar").hidden = v!=="consulta";
+  document.querySelectorAll("nav.tabs a").forEach(a=>{ if(a.dataset.view===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  if (v==="acerca") offlineState();
+}
+window.addEventListener("hashchange", show);
+
+if (!D) { $("#ctx-title").textContent = "No se encontraron los datos (data.js)."; }
+else { render(); renderGuides(); renderAbout(); show(); offlineState(); }
+</script>
+</body>
+</html>
