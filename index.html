@@ -740,7 +740,8 @@ if ("serviceWorker" in navigator && window.isSecureContext && location.protocol!
     navigator.serviceWorker.ready.then(()=>setTimeout(offlineState,800));
     reg.addEventListener("updatefound", ()=>{ const w=reg.installing; w&&w.addEventListener("statechange", ()=>{ if(w.state==="installed" && navigator.serviceWorker.controller){ const b=document.createElement("div"); b.className="banner info"; b.innerHTML='Hay una actualización de CHIIK descargada. <button class="btn ghost" type="button">Activar</button>'; b.querySelector("button").onclick=()=>{ w.postMessage("skip"); }; $("#banners").prepend(b); } }); });
   }).catch(()=>{});
-  navigator.serviceWorker.addEventListener("controllerchange", ()=>location.reload());
+  const hadController = !!navigator.serviceWorker.controller; let reloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{ if (hadController && !reloaded) { reloaded=true; location.reload(); } });
 }
 
 /* ---------- vistas ---------- */
