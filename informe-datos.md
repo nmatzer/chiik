@@ -1,6 +1,6 @@
 # Informe de importación CHIIK
 
-- Generado: 2026-10-21T11:46
+- Generado: 2026-10-21T12:12
 - Filas publicadas: 11921
 - Filas excluidas por bloqueo: 0
 - Conflictos de duplicado: 0

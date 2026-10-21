@@ -1,7 +1,7 @@
 /* CHIIK service worker: guarda la app y los datos para uso sin conexión.
    La versión se sustituye al construir; un cambio de versión instala una caché nueva
    completa antes de activarla, y la anterior sigue funcionando si la descarga falla. */
-const VERSION = "202610211146";
+const VERSION = "202610211212";
 const CACHE = "chiik-" + VERSION;
 const CORE = ["./", "index.html", "data.js", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
 

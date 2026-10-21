@@ -165,6 +165,17 @@ h2.sec{font:800 1.15rem/1.2 var(--f-display);margin:8px 0 0}
 .prose ul,.prose ol{margin:0;padding-left:20px;display:grid;gap:6px}
 .calc{display:grid;gap:12px;max-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .calc .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.step{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0;display:grid;gap:10px;min-width:0}
+.step legend{font:800 1rem var(--f-display);padding:0 6px;display:flex;align-items:center;gap:8px}
+.sn{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:var(--brand-ink);font:700 .8rem var(--f-num)}
+.hint{font-size:.8rem;color:var(--muted)}
+.res-line{font-size:.95rem;min-height:1.2em}
+.res-line b,.sumbox b{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.sumbox{background:var(--yolk-soft);border:1px solid var(--yolk);border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
+.sumbox p{margin:0}
+.sumbox .big{font:600 1.35rem/1.2 var(--f-num)}
+select.inp{appearance:auto}
 .fixed{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-weight:700;font-size:.92rem}
 .agebar{display:none}
 @media (max-width:860px){
@@ -270,20 +281,43 @@ h2.sec{font:800 1.15rem/1.2 var(--f-display);margin:8px 0 0}
   <!-- CALCULADORA -->
   <section id="v-calculadora" hidden>
     <div class="page">
-      <h1>Calculadora de volumen de producto</h1>
-      <p class="lede">Solo multiplica la dosis que usted escribe (ml por litro) por los litros de agua. No recomienda productos, dosis, duración ni tiempos de retiro.</p>
+      <h1>Calculadora de medicación en agua</h1>
+      <p class="lede">Calcula el agua que toma el lote, cuánto producto usar por día y cuánto en todo el tratamiento. La dosis la toma usted de la ficha técnica o la receta.</p>
+      <div class="fixed">Esta calculadora no reemplaza la etiqueta del producto ni la receta del médico veterinario.</div>
+      <div class="seg" role="group" aria-label="Tipo de dosis">
+        <button type="button" class="chip" data-mode="litro" aria-pressed="true">Dosis por litro de agua</button>
+        <button type="button" class="chip" data-mode="peso" aria-pressed="false">Dosis por kg de peso vivo</button>
+      </div>
       <form class="calc" id="calc" onsubmit="return false" novalidate>
-        <div class="fixed">Esta calculadora no reemplaza la etiqueta del producto ni la receta del médico veterinario.</div>
-        <div class="two">
-          <div class="field"><label class="lbl" for="c-dose">Dosis (ml/L)</label><input class="inp num" id="c-dose" inputmode="decimal" autocomplete="off" placeholder="0,75"></div>
-          <div class="field"><label class="lbl" for="c-water">Agua (L)</label><input class="inp num" id="c-water" inputmode="decimal" autocomplete="off" placeholder="1000"></div>
-        </div>
-        <div class="field"><span class="lbl">Rango de la etiqueta (opcional, ml/L)</span>
-          <div class="two"><input class="inp num" id="c-min" inputmode="decimal" autocomplete="off" placeholder="mínimo" aria-label="Dosis mínima de la etiqueta"><input class="inp num" id="c-max" inputmode="decimal" autocomplete="off" placeholder="máximo" aria-label="Dosis máxima de la etiqueta"></div>
-        </div>
-        <div id="c-warn"></div>
-        <button class="btn" id="c-go" type="button">Calcular</button>
-        <div class="out" id="c-out" aria-live="polite">Escriba la dosis y los litros.</div>
+        <fieldset class="step"><legend><span class="sn">1</span> Agua que toma el lote por día</legend>
+          <div class="two">
+            <div class="field"><label class="lbl" for="c-birds">Número de aves</label><input class="inp num" id="c-birds" inputmode="numeric" autocomplete="off" placeholder="10000"></div>
+            <div class="field"><label class="lbl" for="c-feed">Consumo de alimento (g/ave/día)</label><input class="inp num" id="c-feed" inputmode="decimal" autocomplete="off" placeholder="110"></div>
+          </div>
+          <div class="field"><label class="lbl" for="c-ratio">Agua por cada g de alimento (ml)</label><input class="inp num" id="c-ratio" inputmode="decimal" autocomplete="off" value="2"><span class="hint">Regla práctica: agua = alimento × 2. Con calor el consumo de agua sube.</span></div>
+          <div class="res-line" id="r-water" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step" data-for="peso" hidden><legend><span class="sn">2</span> Peso del lote</legend>
+          <div class="field"><label class="lbl" for="c-weight">Peso promedio actual (kg/ave)</label><input class="inp num" id="c-weight" inputmode="decimal" autocomplete="off" placeholder="1,8"></div>
+          <div class="res-line" id="r-mass" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step"><legend><span class="sn" id="sn-dose">2</span> Dosis de la ficha técnica</legend>
+          <div class="field"><label class="lbl" for="c-unit">La ficha técnica indica la dosis en</label><select class="inp" id="c-unit"></select></div>
+          <div class="field"><label class="lbl" for="c-dose" id="l-dose">Dosis</label><input class="inp num" id="c-dose" inputmode="decimal" autocomplete="off" placeholder="1"></div>
+          <div class="field" id="w-conc" hidden><label class="lbl" for="c-conc" id="l-conc">Concentración del producto</label>
+            <div class="two"><input class="inp num" id="c-conc" inputmode="decimal" autocomplete="off" placeholder="500"><select class="inp" id="c-concu" aria-label="Unidad de concentración"><option value="mg/g">mg por g de producto</option><option value="mg/ml">mg por ml de producto</option><option value="%">% (g por 100 g o ml)</option></select></div>
+            <span class="hint">Está en la etiqueta: por ejemplo, amoxicilina 500 mg/g o 50 %.</span></div>
+          <div class="res-line" id="r-day" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step"><legend><span class="sn" id="sn-days">3</span> Días de tratamiento</legend>
+          <div class="field"><label class="lbl" for="c-days">Número de días</label><input class="inp num" id="c-days" inputmode="numeric" autocomplete="off" placeholder="5"></div>
+        </fieldset>
+
+        <div class="sumbox" id="c-sum" aria-live="polite"><p>Complete los datos y el resultado aparece aquí.</p></div>
+        <button class="btn ghost" type="button" id="c-copy" hidden>Copiar resumen para WhatsApp</button>
       </form>
     </div>
   </section>
@@ -598,40 +632,84 @@ function renderGuides(){
 }
 
 /* ---------- calculadora ---------- */
-let confirmed=false;
-function calcReset(){ confirmed=false; $("#c-warn").innerHTML=""; $("#c-out").textContent="Escriba la dosis y los litros."; }
-["c-dose","c-water","c-min","c-max"].forEach(id=>$("#"+id).addEventListener("input", calcReset));
-function cnum(s){ s=String(s).trim(); if(!/^\d+([.,]\d+)?$/.test(s)) return null; const v=parseFloat(s.replace(",",".")); return isFinite(v)?v:null; }
-$("#c-go").addEventListener("click", ()=>{
-  const d=cnum($("#c-dose").value), w=cnum($("#c-water").value);
-  const mnS=$("#c-min").value.trim(), mxS=$("#c-max").value.trim();
-  const mn = mnS?cnum(mnS):null, mx = mxS?cnum(mxS):null;
-  const out=$("#c-out"), warn=$("#c-warn");
-  if (d==null || d<=0) { out.textContent="La dosis debe ser un número mayor que cero (use punto o coma decimal, sin separador de miles)."; return; }
-  if (w==null || w<=0) { out.textContent="Los litros de agua deben ser un número mayor que cero."; return; }
-  if ((mnS && mn==null) || (mxS && mx==null) || (mn!=null && mx!=null && mn>mx)) { out.textContent="El rango de la etiqueta no es válido: revise mínimo y máximo."; return; }
-  const hasRange = mn!=null || mx!=null;
-  const outside = hasRange && ((mn!=null && d<mn) || (mx!=null && d>mx));
-  if (!confirmed) {
-    let msg="";
-    if (!hasRange) msg = "Sin rango de referencia configurado; no se ha comprobado la dosis.";
-    else if (outside) {
-      msg = "La dosis está fuera del rango de la etiqueta que escribió.";
-      const inR = x => (mn==null || x>=mn) && (mx==null || x<=mx);
-      const hit = [[d/10,"10 veces mayor"],[d/100,"100 veces mayor"],[d*10,"10 veces menor"],[d*100,"100 veces menor"]].find(([x])=>inR(x));
-      if (hit) msg += ` Es ${hit[1]} que un valor dentro del rango: revise si hay un error de decimal. CHIIK no cambia la cifra.`;
+const CU = {
+  litro: [["ml/L","ml de producto por litro"],["g/L","g de producto por litro"],["mg/L","mg de producto por litro"],["ia-mg/L","mg de principio activo por litro"]],
+  peso:  [["mg/kg","mg de producto por kg PV al día"],["g/kg","g de producto por kg PV al día"],["ml/kg","ml de producto por kg PV al día"],["ia-mg/kg","mg de principio activo por kg PV al día"]],
+};
+let cmode = "litro";
+function cnum(id, int){ const s=$("#"+id).value.trim(); if(!s) return null; if(int ? !/^\d+$/.test(s) : !/^\d+([.,]\d+)?$/.test(s)) return NaN; const v=parseFloat(s.replace(",", ".")); return isFinite(v)?v:NaN; }
+const fmt = (x,d=2) => x.toLocaleString("es-MX",{maximumFractionDigits:d});
+function qty(v, base){ // base: "ml" | "g" | "mg"
+  if (base==="mg") { if (v>=1e6) return `${fmt(v/1e6,3)} kg`; if (v>=1000) return `${fmt(v/1000,2)} g`; return `${fmt(v,1)} mg`; }
+  if (base==="g") return v>=1000 ? `${fmt(v/1000,3)} kg` : `${fmt(v,2)} g`;
+  return v>=1000 ? `${fmt(v/1000,3)} L` : `${fmt(v,1)} ml`;
+}
+function setMode(m){
+  cmode=m;
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.mode===m));
+  document.querySelectorAll('.step[data-for="peso"]').forEach(f=>f.hidden = m!=="peso");
+  $("#sn-dose").textContent = m==="peso" ? "3" : "2"; $("#sn-days").textContent = m==="peso" ? "4" : "3";
+  $("#c-unit").innerHTML = CU[m].map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+  $("#c-dose").value=""; $("#w-conc").hidden=true;
+  $("#l-dose").textContent = "Dosis (" + $("#c-unit").selectedOptions[0].textContent + ")"; calc();
+}
+function calc(){
+  const birds=cnum("c-birds",true), feed=cnum("c-feed"), ratio=cnum("c-ratio"), days=cnum("c-days",true), dose=cnum("c-dose");
+  const unit=$("#c-unit").value, ia=unit.startsWith("ia-");
+  $("#l-dose").textContent = "Dosis (" + $("#c-unit").selectedOptions[0].textContent + ")";
+  $("#w-conc").hidden = !ia;
+  const bad = (v,msg)=> Number.isNaN(v) ? msg : null;
+  const errs=[bad(birds,"Número de aves: escriba un número entero, sin puntos ni comas."),bad(feed,"Consumo de alimento: use solo números, con punto o coma decimal."),bad(ratio,"Agua por g de alimento: use solo números."),bad(dose,"Dosis: use solo números, con punto o coma decimal."),bad(days,"Días: escriba un número entero.")].filter(Boolean);
+  let weight=null, conc=null;
+  if (cmode==="peso") { weight=cnum("c-weight"); const e=bad(weight,"Peso: use kg con punto o coma decimal (por ejemplo 1,8)."); if(e) errs.push(e); }
+  if (ia) { conc=cnum("c-conc"); const e=bad(conc,"Concentración: use solo números."); if(e) errs.push(e); }
+  [birds,feed,ratio,dose,days,weight,conc].forEach(v=>{ if(v===0) errs.push("Los valores deben ser mayores que cero."); });
+  // Paso 1: agua
+  let waterL=null, waterBird=null;
+  if (birds>0 && feed>0 && ratio>0) { waterBird=feed*ratio; waterL=birds*waterBird/1000; $("#r-water").innerHTML=`${fmt(feed,1)} g × ${fmt(ratio,2)} = <b>${fmt(waterBird,1)} ml/ave/día</b> · × ${fmt(birds,0)} aves = <b>${fmt(waterL,1)} L de agua por día</b>`; }
+  else $("#r-water").textContent="";
+  // Paso 2 (peso): biomasa
+  let massKg=null;
+  if (cmode==="peso") { if (birds>0 && weight>0) { massKg=birds*weight; $("#r-mass").innerHTML=`${fmt(birds,0)} aves × ${fmt(weight,3)} kg = <b>${fmt(massKg,1)} kg de peso vivo</b>`; } else $("#r-mass").textContent=""; }
+  // Paso 3: producto por día
+  let perDay=null, base=null, desc="", activeDay=null, aBase=null;
+  const concToPerUnit = () => { // mg de activo por g o ml de producto
+    const cu=$("#c-concu").value; if(cu==="%") return { mg: conc*10, b: "g" }; return { mg: conc, b: cu==="mg/ml"?"ml":"g" }; };
+  if (dose>0) {
+    if (cmode==="litro" && waterL) {
+      if (!ia) { base = unit==="ml/L"?"ml":unit==="g/L"?"g":"mg"; perDay = dose*waterL; desc=`${fmt(dose,3)} ${unit} × ${fmt(waterL,1)} L`; }
+      else if (conc>0) { const c=concToPerUnit(); activeDay=dose*waterL; aBase="mg"; perDay=activeDay/c.mg; base=c.b; desc=`${fmt(dose,3)} mg/L × ${fmt(waterL,1)} L = ${qty(activeDay,"mg")} de principio activo ÷ ${fmt(c.mg,1)} mg/${c.b}`; }
     }
-    if (msg) {
-      warn.innerHTML = `<div class="banner ${outside?"warn":"pend"}">${esc(msg)}</div><label class="row"><input type="checkbox" id="c-ok"> Confirmo que la dosis es correcta</label>`;
-      $("#c-ok").addEventListener("change", e=>{ confirmed=e.target.checked; });
-      out.textContent = "Confirme la dosis para calcular.";
-      return;
+    if (cmode==="peso" && massKg) {
+      if (!ia) { base = unit==="ml/kg"?"ml":unit==="g/kg"?"g":"mg"; perDay = dose*massKg; desc=`${fmt(dose,3)} ${unit} × ${fmt(massKg,1)} kg`; }
+      else if (conc>0) { const c=concToPerUnit(); activeDay=dose*massKg; aBase="mg"; perDay=activeDay/c.mg; base=c.b; desc=`${fmt(dose,3)} mg/kg × ${fmt(massKg,1)} kg = ${qty(activeDay,"mg")} de principio activo ÷ ${fmt(c.mg,1)} mg/${c.b}`; }
     }
   }
-  const total = d*w;
-  const f = x => x.toLocaleString("es-MX",{maximumFractionDigits:3});
-  out.innerHTML = `<b class="num">${f(d)} ml/L × ${f(w)} L = ${f(total)} ml</b> de producto.${total>=1000?` <span class="num">(${f(total/1000)} L)</span>`:""}`;
-});
+  $("#r-day").innerHTML = perDay ? `${desc} = <b>${qty(perDay,base)} de producto por día</b>` : "";
+  // Resumen
+  const sum=$("#c-sum"); let txt="";
+  if (errs.length) { sum.innerHTML = errs.map(e=>`<p>${esc(e)}</p>`).join(""); $("#c-copy").hidden=true; return; }
+  if (!perDay || !waterL) { sum.innerHTML = "<p>Complete los datos y el resultado aparece aquí.</p>"; $("#c-copy").hidden=true; return; }
+  const perL = perDay/waterL;
+  let h = `<p>Producto por día</p><p class="big">${qty(perDay,base)}</p>
+    <p>disueltos en <b>${fmt(waterL,1)} L</b> de agua por día (<b>${qty(perL,base)}</b> por litro).</p>`;
+  if (cmode==="peso") h += `<p>Equivale a <b>${fmt(dose,3)} ${esc(unit.replace("ia-",""))}</b> para <b>${fmt(massKg,1)} kg</b> de peso vivo.</p>`;
+  if (days>0) h += `<p>Tratamiento de <b>${fmt(days,0)} días</b>: <b>${qty(perDay*days,base)}</b> de producto en total y <b>${fmt(waterL*days,1)} L</b> de agua medicada.</p><p class="hint">Si el lote crece durante el tratamiento, recalcule cada día con el consumo y el peso actuales.</p>`;
+  else h += `<p class="hint">Escriba los días de tratamiento para ver el total.</p>`;
+  sum.innerHTML = h;
+  txt = `*Cálculo CHIIK · medicación en agua*\n` +
+    `Aves: ${fmt(birds,0)} · Alimento: ${fmt(feed,1)} g/ave/día · Agua: ${fmt(waterBird,1)} ml/ave/día\n` +
+    (cmode==="peso" ? `Peso promedio: ${fmt(weight,3)} kg · Peso vivo total: ${fmt(massKg,1)} kg\n` : "") +
+    `Dosis (ficha técnica): ${fmt(dose,3)} ${$("#c-unit").selectedOptions[0].textContent}` + (ia?` · Concentración: ${fmt(conc,2)} ${$("#c-concu").value}`:"") + `\n` +
+    `*Por día:* ${qty(perDay,base)} de producto en ${fmt(waterL,1)} L de agua (${qty(perL,base)} por litro)\n` +
+    (days>0 ? `*Total ${fmt(days,0)} días:* ${qty(perDay*days,base)} de producto · ${fmt(waterL*days,1)} L de agua\n` : "") +
+    `_No reemplaza la etiqueta del producto ni la receta del médico veterinario._`;
+  $("#c-copy").hidden=false; $("#c-copy").dataset.txt=txt;
+}
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+$("#calc").addEventListener("input", calc); $("#calc").addEventListener("change", calc);
+$("#c-copy").addEventListener("click", async e=>{ const t=e.currentTarget.dataset.txt; try{ await navigator.clipboard.writeText(t); e.currentTarget.textContent="Copiado"; setTimeout(()=>e.currentTarget.textContent="Copiar resumen para WhatsApp",1500);}catch(err){ const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(x){} ta.remove(); } });
+setMode("litro");
 
 /* ---------- instalar / acerca ---------- */
 function renderAbout(){
