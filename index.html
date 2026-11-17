@@ -187,7 +187,7 @@ h2.sec{font:800 1.15rem/1.2 var(--f-display);margin:8px 0 0}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .seg .chip{justify-content:center;text-align:center;line-height:1.2}
 .calc-pick{margin-bottom:4px}
-.combo{display:grid;grid-template-columns:5.5rem 1fr;gap:6px}
+.combo{display:grid;grid-template-columns:9.5rem 1fr;gap:6px}
 .combo.r{grid-template-columns:1fr 5.5rem}
 .two.end{align-items:end}
 .step{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0;display:grid;gap:10px;min-width:0}
@@ -361,7 +361,7 @@ select.inp{appearance:auto}
       <form class="calc" id="dcalc" onsubmit="return false" novalidate>
         <fieldset class="step"><legend><span class="sn">1</span> Bolsa de alimento</legend>
           <div class="field"><label class="lbl" for="d-price">Precio de la bolsa</label>
-            <div class="combo"><select class="inp" id="d-cur" aria-label="Moneda"><option value="Q">Q</option><option value="$">$ MXN</option><option value="US$">US$</option></select><input class="inp num" id="d-price" inputmode="decimal" autocomplete="off" placeholder="450"></div></div>
+            <div class="combo"><select class="inp" id="d-cur" aria-label="Moneda"><option value="Q">Quetzales (Q)</option><option value="US$">Dólares (US$)</option></select><input class="inp num" id="d-price" inputmode="decimal" autocomplete="off" placeholder="450"></div></div>
           <div class="field"><label class="lbl" for="d-bag">Contenido de la bolsa</label>
             <div class="combo r"><input class="inp num" id="d-bag" inputmode="decimal" autocomplete="off" placeholder="20"><select class="inp" id="d-bagu" aria-label="Unidad del contenido"><option value="kg">kg</option><option value="lb">lb</option></select></div></div>
           <div class="res-line" id="d-r1" aria-live="polite"></div>
