@@ -184,7 +184,12 @@ h2.sec{font:800 1.15rem/1.2 var(--f-display);margin:8px 0 0}
 .prose ul,.prose ol{margin:0;padding-left:20px;display:grid;gap:6px}
 .calc{display:grid;gap:12px;max-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .calc .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg .chip{justify-content:center;text-align:center;line-height:1.2}
+.calc-pick{margin-bottom:4px}
+.combo{display:grid;grid-template-columns:5.5rem 1fr;gap:6px}
+.combo.r{grid-template-columns:1fr 5.5rem}
+.two.end{align-items:end}
 .step{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0;display:grid;gap:10px;min-width:0}
 .step legend{font:800 1rem var(--f-display);padding:0 6px;display:flex;align-items:center;gap:8px}
 .sn{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:var(--brand-ink);font:700 .8rem var(--f-num)}
@@ -241,7 +246,7 @@ select.inp{appearance:auto}
     <nav class="tabs" aria-label="Secciones">
       <a href="#consulta" data-view="consulta">Consulta</a>
       <a href="#guias" data-view="guias">Guías</a>
-      <a href="#calculadora" data-view="calculadora">Dosis</a>
+      <a href="#calculadora" data-view="calculadora">Calcular</a>
       <a href="#acerca" data-view="acerca">Instalar</a>
     </nav>
     <span class="net" id="net" role="status"><i></i><span>Comprobando…</span></span>
@@ -304,10 +309,16 @@ select.inp{appearance:auto}
     </div>
   </section>
 
-  <!-- CALCULADORA -->
+  <!-- CALCULADORAS -->
   <section id="v-calculadora" hidden>
     <div class="page">
-      <h1>Calculadora de medicación en agua</h1>
+      <h1>Calculadoras</h1>
+      <div class="seg calc-pick" role="group" aria-label="Elegir calculadora">
+        <button type="button" class="chip" data-calc="agua" aria-pressed="true">Medicación en agua · aves</button>
+        <button type="button" class="chip" data-calc="perro" aria-pressed="false">Costo de alimento · perros</button>
+      </div>
+
+      <div id="k-agua">
       <p class="lede">Calcula el agua que toma el lote, cuánto producto usar por día y cuánto en todo el tratamiento. La dosis la toma usted de la ficha técnica o la receta.</p>
       <div class="fixed">Esta calculadora no reemplaza la etiqueta del producto ni la receta del médico veterinario.</div>
       <div class="seg" role="group" aria-label="Tipo de dosis">
@@ -315,36 +326,64 @@ select.inp{appearance:auto}
         <button type="button" class="chip" data-mode="peso" aria-pressed="false">Dosis por kg de peso vivo</button>
       </div>
       <form class="calc" id="calc" onsubmit="return false" novalidate>
-        <fieldset class="step"><legend><span class="sn">1</span> Agua que toma el lote por día</legend>
-          <div class="two">
-            <div class="field"><label class="lbl" for="c-birds">Número de aves</label><input class="inp num" id="c-birds" inputmode="numeric" autocomplete="off" placeholder="10000"></div>
-            <div class="field"><label class="lbl" for="c-feed">Consumo de alimento (g/ave/día)</label><input class="inp num" id="c-feed" inputmode="decimal" autocomplete="off" placeholder="110"></div>
-          </div>
-          <div class="field"><label class="lbl" for="c-ratio">Agua por cada g de alimento (ml)</label><input class="inp num" id="c-ratio" inputmode="decimal" autocomplete="off" value="2"><span class="hint">Regla práctica: agua = alimento × 2. Con calor el consumo de agua sube.</span></div>
-          <div class="res-line" id="r-water" aria-live="polite"></div>
-        </fieldset>
-
-        <fieldset class="step" data-for="peso" hidden><legend><span class="sn">2</span> Peso del lote</legend>
-          <div class="field"><label class="lbl" for="c-weight">Peso promedio actual (kg/ave)</label><input class="inp num" id="c-weight" inputmode="decimal" autocomplete="off" placeholder="1,8"></div>
-          <div class="res-line" id="r-mass" aria-live="polite"></div>
-        </fieldset>
-
-        <fieldset class="step"><legend><span class="sn" id="sn-dose">2</span> Dosis de la ficha técnica</legend>
+        <fieldset class="step" id="f-dose"><legend><span class="sn">1</span> Dosis de la ficha técnica</legend>
           <div class="field"><label class="lbl" for="c-unit">La ficha técnica indica la dosis en</label><select class="inp" id="c-unit"></select></div>
           <div class="field"><label class="lbl" for="c-dose" id="l-dose">Dosis</label><input class="inp num" id="c-dose" inputmode="decimal" autocomplete="off" placeholder="1"></div>
           <div class="field" id="w-conc" hidden><label class="lbl" for="c-conc" id="l-conc">Concentración del producto</label>
             <div class="two"><input class="inp num" id="c-conc" inputmode="decimal" autocomplete="off" placeholder="500"><select class="inp" id="c-concu" aria-label="Unidad de concentración"><option value="mg/g">mg por g de producto</option><option value="mg/ml">mg por ml de producto</option><option value="%">% (g por 100 g o ml)</option></select></div>
             <span class="hint">Está en la etiqueta: por ejemplo, amoxicilina 500 mg/g o 50 %.</span></div>
-          <div class="res-line" id="r-day" aria-live="polite"></div>
         </fieldset>
 
-        <fieldset class="step"><legend><span class="sn" id="sn-days">3</span> Días de tratamiento</legend>
+        <fieldset class="step" id="f-mass"><legend><span class="sn">2</span> Aves y peso actual</legend>
+          <div class="field" id="w-birds"><label class="lbl" for="c-birds">Número de aves</label><input class="inp num" id="c-birds" inputmode="numeric" autocomplete="off" placeholder="10000"></div>
+          <div class="field"><label class="lbl" for="c-weight">Peso promedio actual (kg/ave)</label><input class="inp num" id="c-weight" inputmode="decimal" autocomplete="off" placeholder="1,8"></div>
+          <div class="res-line" id="r-mass" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step" id="f-water"><legend><span class="sn">1</span> Agua que toma el lote por día</legend>
+          <div class="field"><label class="lbl" for="c-feed">Consumo de alimento (g/ave/día)</label><input class="inp num" id="c-feed" inputmode="decimal" autocomplete="off" placeholder="110"></div>
+          <div class="field"><label class="lbl" for="c-ratio">Agua por cada g de alimento (ml)</label><input class="inp num" id="c-ratio" inputmode="decimal" autocomplete="off" value="2"><span class="hint">Regla práctica: agua = alimento × 2. Con calor el consumo de agua sube.</span></div>
+          <div class="res-line" id="r-water" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step" id="f-days"><legend><span class="sn">3</span> Días de tratamiento</legend>
           <div class="field"><label class="lbl" for="c-days">Número de días</label><input class="inp num" id="c-days" inputmode="numeric" autocomplete="off" placeholder="5"></div>
+          <div class="res-line" id="r-day" aria-live="polite"></div>
         </fieldset>
 
         <div class="sumbox" id="c-sum" aria-live="polite"><p>Complete los datos y el resultado aparece aquí.</p></div>
         <button class="btn ghost" type="button" id="c-copy" hidden>Copiar resumen para WhatsApp</button>
       </form>
+      </div>
+
+      <div id="k-perro" hidden>
+      <p class="lede">Calcula cuánto cuesta alimentar a sus perros por día, por mes y por perro, y cuántas bolsas necesita. La ración la toma usted de la tabla del empaque.</p>
+      <form class="calc" id="dcalc" onsubmit="return false" novalidate>
+        <fieldset class="step"><legend><span class="sn">1</span> Bolsa de alimento</legend>
+          <div class="field"><label class="lbl" for="d-price">Precio de la bolsa</label>
+            <div class="combo"><select class="inp" id="d-cur" aria-label="Moneda"><option value="Q">Q</option><option value="$">$ MXN</option><option value="US$">US$</option></select><input class="inp num" id="d-price" inputmode="decimal" autocomplete="off" placeholder="450"></div></div>
+          <div class="field"><label class="lbl" for="d-bag">Contenido de la bolsa</label>
+            <div class="combo r"><input class="inp num" id="d-bag" inputmode="decimal" autocomplete="off" placeholder="20"><select class="inp" id="d-bagu" aria-label="Unidad del contenido"><option value="kg">kg</option><option value="lb">lb</option></select></div></div>
+          <div class="res-line" id="d-r1" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step"><legend><span class="sn">2</span> Ración diaria</legend>
+          <div class="two end">
+            <div class="field"><label class="lbl" for="d-dogs">Número de perros</label><input class="inp num" id="d-dogs" inputmode="numeric" autocomplete="off" value="1"></div>
+            <div class="field"><label class="lbl" for="d-ration">Ración por perro (g/día)</label><input class="inp num" id="d-ration" inputmode="decimal" autocomplete="off" placeholder="300"></div>
+          </div>
+          <span class="hint">Use la tabla del empaque según el peso del perro. Si son perros de distinto tamaño, sume las raciones y ponga 1 perro.</span>
+          <div class="res-line" id="d-r2" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="step"><legend><span class="sn">3</span> Período</legend>
+          <div class="field"><label class="lbl" for="d-days">Número de días</label><input class="inp num" id="d-days" inputmode="numeric" autocomplete="off" value="30"></div>
+        </fieldset>
+
+        <div class="sumbox" id="d-sum" aria-live="polite"><p>Complete los datos y el resultado aparece aquí.</p></div>
+        <button class="btn ghost" type="button" id="d-copy" hidden>Copiar resumen para WhatsApp</button>
+      </form>
+      </div>
     </div>
   </section>
 
@@ -670,11 +709,19 @@ function qty(v, base){ // base: "ml" | "g" | "mg"
   if (base==="g") return v>=1000 ? `${fmt(v/1000,3)} kg` : `${fmt(v,2)} g`;
   return v>=1000 ? `${fmt(v/1000,3)} L` : `${fmt(v,1)} ml`;
 }
+const ORDER = { litro: ["f-water","f-dose","f-days"], peso: ["f-dose","f-mass","f-water","f-days"] };
 function setMode(m){
   cmode=m;
   document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.mode===m));
-  document.querySelectorAll('.step[data-for="peso"]').forEach(f=>f.hidden = m!=="peso");
-  $("#sn-dose").textContent = m==="peso" ? "3" : "2"; $("#sn-days").textContent = m==="peso" ? "4" : "3";
+  const form=$("#calc"), anchor=$("#r-day"), end=$("#c-sum");
+  ["f-water","f-dose","f-mass","f-days"].forEach(id=>$("#"+id).hidden = !ORDER[m].includes(id));
+  ORDER[m].forEach((id,i)=>{ form.insertBefore($("#"+id), end); $("#"+id+" .sn").textContent = i+1; });
+  // El número de aves va con el agua (dosis por litro) o con el peso (dosis por kg).
+  const wb=$("#w-birds");
+  if (m==="peso") $("#f-mass").insertBefore(wb, $("#f-mass .field"));
+  else $("#f-water").insertBefore(wb, $("#f-water .field"));
+  // El resultado de producto por día queda debajo del paso que lo completa.
+  (m==="peso" ? $("#f-mass") : $("#f-dose")).appendChild(anchor);
   $("#c-unit").innerHTML = CU[m].map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
   $("#c-dose").value=""; $("#w-conc").hidden=true;
   $("#l-dose").textContent = "Dosis (" + $("#c-unit").selectedOptions[0].textContent + ")"; calc();
@@ -736,6 +783,48 @@ document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",(
 $("#calc").addEventListener("input", calc); $("#calc").addEventListener("change", calc);
 $("#c-copy").addEventListener("click", async e=>{ const t=e.currentTarget.dataset.txt; try{ await navigator.clipboard.writeText(t); e.currentTarget.textContent="Copiado"; setTimeout(()=>e.currentTarget.textContent="Copiar resumen para WhatsApp",1500);}catch(err){ const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(x){} ta.remove(); } });
 setMode("litro");
+
+/* ---------- costo de alimento para perros ---------- */
+function dogCalc(){
+  const price=cnum("d-price"), bag=cnum("d-bag"), dogs=cnum("d-dogs",true), ration=cnum("d-ration"), days=cnum("d-days",true);
+  const cur=$("#d-cur").value, bu=$("#d-bagu").value;
+  const bad=(v,msg)=>Number.isNaN(v)?msg:null;
+  const errs=[bad(price,"Precio: use solo números, con punto o coma decimal."),bad(bag,"Contenido de la bolsa: use solo números."),bad(dogs,"Número de perros: escriba un número entero."),bad(ration,"Ración: use gramos, solo números."),bad(days,"Días: escriba un número entero.")].filter(Boolean);
+  [price,bag,dogs,ration,days].forEach(v=>{ if(v===0) errs.push("Los valores deben ser mayores que cero."); });
+  const money=x=>`${cur} ${x.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  const bagKg = bag>0 ? (bu==="lb" ? bag*0.45359237 : bag) : null;
+  const perKg = price>0 && bagKg ? price/bagKg : null;
+  $("#d-r1").innerHTML = perKg ? `${money(price)} ÷ ${fmt(bag,2)} ${bu}${bu==="lb"?` (${fmt(bagKg,2)} kg)`:""} = <b>${money(perKg)} por kg</b>` : "";
+  const kgDay = dogs>0 && ration>0 ? dogs*ration/1000 : null;
+  $("#d-r2").innerHTML = kgDay ? `${fmt(dogs,0)} × ${fmt(ration,0)} g = <b>${fmt(kgDay,3)} kg por día</b>` + (perKg?` · <b>${money(kgDay*perKg)} por día</b>`:"") : "";
+  const sum=$("#d-sum");
+  if (errs.length) { sum.innerHTML=errs.map(e=>`<p>${esc(e)}</p>`).join(""); $("#d-copy").hidden=true; return; }
+  if (!perKg || !kgDay) { sum.innerHTML="<p>Complete los datos y el resultado aparece aquí.</p>"; $("#d-copy").hidden=true; return; }
+  const day=kgDay*perKg, perDog=day/dogs, bagDays=bagKg/kgDay;
+  let h=`<p>Costo por día</p><p class="big">${money(day)}</p>`;
+  if (dogs>1) h+=`<p>Por perro: <b>${money(perDog)}</b> al día · <b>${money(perDog*30)}</b> al mes (30 días).</p>`;
+  h+=`<p>Una bolsa de ${fmt(bag,2)} ${bu} dura <b>${fmt(bagDays,1)} días</b>.</p>`;
+  let txtP="";
+  if (days>0) { const kgT=kgDay*days, bags=kgT/bagKg, bagsUp=Math.ceil(bags-1e-9);
+    h+=`<p>En <b>${fmt(days,0)} días</b>: <b>${money(day*days)}</b> · ${fmt(kgT,2)} kg de alimento = ${fmt(bags,2)} bolsas (comprar <b>${bagsUp}</b>, ${money(bagsUp*price)}).</p>`;
+    txtP=`*${fmt(days,0)} días:* ${money(day*days)} · ${fmt(kgT,2)} kg · comprar ${bagsUp} bolsa${bagsUp===1?"":"s"} (${money(bagsUp*price)})\n`; }
+  sum.innerHTML=h;
+  $("#d-copy").dataset.txt = `*Cálculo CHIIK · costo de alimento para perros*\n`+
+    `Bolsa: ${fmt(bag,2)} ${bu} a ${money(price)} (${money(perKg)}/kg)\n`+
+    `Perros: ${fmt(dogs,0)} · Ración: ${fmt(ration,0)} g/perro/día · ${fmt(kgDay,3)} kg/día\n`+
+    `*Por día:* ${money(day)}`+(dogs>1?` (${money(perDog)} por perro)`:"")+`\n`+txtP+
+    `Una bolsa dura ${fmt(bagDays,1)} días`;
+  $("#d-copy").hidden=false;
+}
+$("#dcalc").addEventListener("input", dogCalc); $("#dcalc").addEventListener("change", dogCalc);
+async function copyTxt(btn){ const t=btn.dataset.txt; try{ await navigator.clipboard.writeText(t); }catch(err){ const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(x){} ta.remove(); } const o=btn.textContent; btn.textContent="Copiado"; setTimeout(()=>btn.textContent=o,1500); }
+$("#d-copy").addEventListener("click", e=>copyTxt(e.currentTarget));
+function setCalc(k){
+  document.querySelectorAll("[data-calc]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.calc===k));
+  $("#k-agua").hidden = k!=="agua"; $("#k-perro").hidden = k!=="perro";
+}
+document.querySelectorAll("[data-calc]").forEach(b=>b.addEventListener("click",()=>setCalc(b.dataset.calc)));
+dogCalc();
 
 /* ---------- instalar / acerca ---------- */
 function renderAbout(){
